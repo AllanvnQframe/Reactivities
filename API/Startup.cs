@@ -33,7 +33,14 @@ namespace API
             });
             
             services.AddControllers();
-            
+            //allow client to call api and use api resonse values , then also add required middleware in configure
+            ///
+            ///https://docs.microsoft.com/en-us/aspnet/core/security/cors?view=aspnetcore-3.1#enable-cors 
+            services.AddCors(options => options.AddPolicy("CorsPolicy", pol =>
+            {
+                pol.AllowAnyHeader().AllowAnyMethod().WithOrigins("http//localhost.3000");
+            }));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -49,7 +56,8 @@ namespace API
             app.UseRouting();
 
             app.UseAuthorization();
-
+            //set Cors middleware (Croqq Origin Resource Sharing => what origins can use api resources = responses)
+            app.UseCors("CorsPolicy")
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
